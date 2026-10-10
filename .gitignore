@@ -7,6 +7,3 @@ __pycache__/
 
 # created when the notebook runs
 *.pkl
-
-# personal notes
-NOTES_HINGLISH.md
