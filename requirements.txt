@@ -1,11 +1,7 @@
-numpy
 pandas
+numpy
 matplotlib
 seaborn
 scikit-learn
 imbalanced-learn
-tensorflow
-keras
-xgboost
 jupyter
-jupyterlab

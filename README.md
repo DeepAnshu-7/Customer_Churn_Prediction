@@ -1,120 +1,45 @@
 # Customer Churn Prediction
 
-A machine learning project for predicting customer churn using the Telco customer dataset. The notebook covers data preprocessing, exploratory data analysis (EDA), categorical encoding, feature scaling, class-imbalance handling with SMOTE, and comparisons across multiple classification approaches.
+A machine learning project that predicts whether a telecom customer will leave the company (churn), using the Telco Customer Churn dataset (7,043 customers).
 
-## Project Workflow
+## Steps
 
-1. Load and inspect the customer churn dataset.
-2. Remove the customerID column.
-3. Clean and convert TotalCharges.
-4. Perform exploratory data analysis and visualize churn patterns.
-5. Encode categorical variables using binary encoding and one-hot encoding.
-6. Scale numerical features using MinMaxScaler / StandardScaler.
-7. Split the data into training and test sets.
-8. Handle class imbalance using SMOTE.
-9. Train and evaluate:
-  * Support Vector Machine (SVM)
-  * Random Forest
-  * Neural Network using TensorFlow/Keras
-  * Logistic Regression
-  * XGBoost
-10. Evaluate models using accuracy, precision, recall, F1-score, classification reports, and confusion matrices.
-11. Compare balanced and unbalanced approaches, including 5-fold and 10-fold cross-validation.
+1. Data cleaning (dropped `customerID`, fixed blank `TotalCharges` values)
+2. EDA with charts
+3. Encoding categorical columns (Yes/No mapping and one-hot encoding)
+4. Train/test split (80/20, stratified)
+5. Scaling with MinMaxScaler (fit on train data only)
+6. Handling class imbalance with SMOTE (train data only)
+7. Training Logistic Regression, SVM and Random Forest, with and without SMOTE
+8. 5-fold cross validation of the best model
+9. Confusion matrix, feature importance and saving the model
 
+## Results
 
-## Dataset
+| Model | Data | Accuracy | Precision | Recall | F1 |
+|---|---|---|---|---|---|
+| Logistic Regression | Normal | 0.799 | 0.642 | 0.551 | 0.593 |
+| Logistic Regression | SMOTE | 0.739 | 0.505 | 0.789 | 0.616 |
+| SVM | Normal | 0.789 | 0.628 | 0.497 | 0.555 |
+| SVM | SMOTE | 0.759 | 0.535 | 0.690 | 0.603 |
+| Random Forest | Normal | 0.803 | 0.659 | 0.532 | 0.589 |
+| **Random Forest** | **SMOTE** | **0.773** | **0.555** | **0.725** | **0.629** |
 
-The notebook expects the dataset file to be named:
+Random Forest with SMOTE gave the best F1 score. It catches 271 out of 374 churn customers in the test set, and 5-fold cross validation gives a similar F1 (0.625).
 
-```text
-Dataset.csv
-```
+Contract type, tenure and monthly charges are the most important features.
 
-Place Dataset.csv in the same directory as the notebook before running it.
+## Tech Used
 
-The notebook works with 7,043 customer records and predicts the binary Churn target.
-
-> **Note:** This repository does not include the dataset file unless you have permission to redistribute it. Add it locally as Dataset.csv to run the notebook.
-
-## Technologies Used
-
-* Python
-* NumPy
-* Pandas
-* Matplotlib
-* Seaborn
-* Scikit-learn
-* Imbalanced-learn (SMOTE)
-* TensorFlow / Keras
-* XGBoost
-* Jupyter Notebook
-
-## Models and Evaluation
-
-The project experiments with both classical machine learning and neural-network approaches. It also investigates the effect of class-imbalance handling and cross-validation on model performance.
-
-The notebook reports metrics such as:
-
-* Accuracy
-* Precision
-* Recall
-* F1-score
-* Confusion Matrix
-
-### Example Results
-
-For the Logistic Regression experiments:
-
-* 80/20 unbalanced split: 80.41% accuracy
-* 5-fold unbalanced cross-validation: 80.65% average accuracy
-* 5-fold balanced cross-validation: 80.08% average recall
-* 10-fold balanced cross-validation: 80.05% average recall
-
-For the other experiments, the notebook contains detailed classification reports and evaluation results for SVM, Random Forest, Neural Network, and XGBoost.
+Python, Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn, Imbalanced-learn
 
 ## How to Run
 
-1. Clone the repository
-
-```bash
-git clone <YOUR_REPOSITORY_URL>
-cd customer-churn-prediction
-```
-
-2. Install dependencies
 ```bash
 pip install -r requirements.txt
+jupyter notebook churn_prediction.ipynb
 ```
 
-3. Add the dataset
+## Dataset
 
-Place `Dataset.csv` in the project directory.
-
-4. Open the notebook
-
-```bash
-jupyter notebook Customer_Churn_Prediction.ipynb
-```
-
-or open it using JupyterLab:
-
-```bash
-jupyter lab
-```
-
-## Project Structure
-
-```text
-customer-churn-prediction/
-├── Customer_Churn_Prediction.ipynb
-├── README.md
-├── requirements.txt
-└── Dataset.csv              # not included by default
-```
-## Future Improvements
-
-* Hyperparameter tuning for the evaluated models.
-* More systematic model comparison
-* ROC-AUC and PR-AUC analysis
-* Feature-importance and model-interpretability analysis
-* Deployment as a web application/API
+[IBM Telco Customer Churn](https://github.com/IBM/telco-customer-churn-on-icp4d) dataset, stored in `data/Telco-Customer-Churn.csv`.
