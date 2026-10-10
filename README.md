@@ -6,34 +6,48 @@ A machine learning project that predicts whether a telecom customer will leave t
 
 1. Data cleaning (dropped `customerID`, fixed blank `TotalCharges` values)
 2. EDA with charts
-3. Encoding categorical columns (Yes/No mapping and one-hot encoding)
+3. Encoding Yes/No columns as 1/0
 4. Train/test split (80/20, stratified)
-5. Scaling with MinMaxScaler (fit on train data only)
-6. Handling class imbalance with SMOTE (train data only)
-7. Training Logistic Regression, SVM and Random Forest, with and without SMOTE
-8. 5-fold cross validation of the best model
-9. Confusion matrix, feature importance and saving the model
+5. Pipeline with MinMaxScaler, SMOTENC (for class imbalance) and one-hot encoding, so every step learns only from training data
+6. Comparing Logistic Regression, SVM and Random Forest with no balancing, SMOTE and class weight, using 5-fold cross validation
+7. Hyperparameter tuning of the best model with GridSearchCV
+8. Testing the final model on the test set
+9. Checking the decision threshold with cross validation predictions on the training data (0.5 gave the best F1)
+10. Feature importance and saving the model
 
 ## Results
 
-| Model | Data | Accuracy | Precision | Recall | F1 |
-|---|---|---|---|---|---|
-| Logistic Regression | Normal | 0.799 | 0.642 | 0.551 | 0.593 |
-| Logistic Regression | SMOTE | 0.739 | 0.505 | 0.789 | 0.616 |
-| SVM | Normal | 0.789 | 0.628 | 0.497 | 0.555 |
-| SVM | SMOTE | 0.759 | 0.535 | 0.690 | 0.603 |
-| Random Forest | Normal | 0.803 | 0.659 | 0.532 | 0.589 |
-| **Random Forest** | **SMOTE** | **0.773** | **0.555** | **0.725** | **0.629** |
+5-fold cross validation on the training data:
 
-Random Forest with SMOTE gave the best F1 score. It catches 271 out of 374 churn customers in the test set, and 5-fold cross validation gives a similar F1 (0.625).
+| Model | Data | Accuracy | Precision | Recall | F1 | ROC-AUC |
+|---|---|---|---|---|---|---|
+| **Random Forest** | **SMOTE** | **0.779** | **0.565** | **0.728** | **0.636** | **0.840** |
+| Random Forest | Class Weight | 0.767 | 0.544 | 0.760 | 0.634 | 0.844 |
+| Logistic Regression | Class Weight | 0.749 | 0.518 | 0.798 | 0.628 | 0.845 |
+| Logistic Regression | SMOTE | 0.758 | 0.531 | 0.767 | 0.627 | 0.840 |
+| SVM | Class Weight | 0.748 | 0.517 | 0.783 | 0.623 | 0.826 |
+| SVM | SMOTE | 0.764 | 0.542 | 0.714 | 0.616 | 0.818 |
+| Logistic Regression | Normal | 0.801 | 0.651 | 0.540 | 0.590 | 0.846 |
+| SVM | Normal | 0.802 | 0.665 | 0.512 | 0.578 | 0.807 |
+| Random Forest | Normal | 0.800 | 0.664 | 0.505 | 0.573 | 0.842 |
 
-Contract type, tenure and monthly charges are the most important features.
+Random Forest with SMOTE was tuned with GridSearchCV (best: `max_depth=10`, `min_samples_leaf=5`, `n_estimators=200`, cross validation F1 0.639).
+
+Final model on the test set:
+
+| Accuracy | Precision | Recall | F1 | ROC-AUC |
+|---|---|---|---|---|
+| 0.764 | 0.542 | 0.719 | 0.618 | 0.838 |
+
+It catches 269 out of 374 churn customers. Contract type, tenure and electronic check payment are the most important features.
 
 ## Tech Used
 
 Python, Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn, Imbalanced-learn
 
 ## How to Run
+
+Tested with Python 3.14.
 
 ```bash
 pip install -r requirements.txt
